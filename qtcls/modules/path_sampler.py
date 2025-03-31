@@ -56,10 +56,9 @@ class PathSampler(nn.Module):
             paths: torch.Tensor([n_node, k_path, l_path])
         """
         n_node, n_path, k_path, l_path = len(nodes), self.n_path, self.k_path, self.l_path
-        paths = self.random_walk(g, torch.repeat_interleave(nodes, n_path))
-        mask = self.meta_mask[torch.randint(l_path, (n_node * n_path,))]
+        paths = self.random_walk(g, torch.repeat_interleave(nodes, n_path)).reshape(n_node, n_path, l_path)
+        mask = self.meta_mask[torch.randint(l_path, (n_node, n_path))]
         paths[mask] = -1
-        paths = paths.reshape(n_node, n_path, l_path)
         paths = self.path_selection(g, paths)
 
         return paths
