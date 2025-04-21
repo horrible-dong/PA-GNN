@@ -17,7 +17,7 @@ class PathSampler(nn.Module):
         self.n_path = n_path
         self.k_path = k_path
         self.l_path = l_path
-        self.register_buffer('meta_mask', ~torch.tril(torch.full([l_path, l_path], fill_value=True)))  # <=> U - I
+        self.register_buffer('meta_mask', ~torch.tril(torch.full([l_path, l_path], fill_value=True)), persistent=False)  # <=> U - I
 
     def random_walk(self, g, start_nodes):
         """
